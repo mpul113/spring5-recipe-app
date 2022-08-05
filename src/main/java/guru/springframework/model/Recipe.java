@@ -1,5 +1,7 @@
 package guru.springframework.model;
 
+import guru.springframework.enums.Difficulty;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -17,7 +19,7 @@ public class Recipe {
     private String url;
     private String directions;
 
-    @Lob
+    @Lob //Large Object
     private Byte[] image;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -26,6 +28,16 @@ public class Recipe {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
     private Set<Ingredient> ingredient;
 
+    //Ordinal is Default - gets persisted to 1...x of # of enums (Easy, Moderate, Hard) => (1,2,3)
+    //  STRING overwrites, but is better since is less of a hassle with DB stuff (You add in a extra one and it goes to hell)
+    @Enumerated(value = EnumType.STRING)
+    private Difficulty difficulty;
+
+    @ManyToMany
+    @JoinTable(name = "recipe_category",
+        joinColumns = @JoinColumn(name = "recipie_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories;
+
     public Long getId() {
         return id;
     }
@@ -33,9 +45,6 @@ public class Recipe {
     public void setId(Long id) {
         this.id = id;
     }
-//TODO: Add Difficulty ENUM
-    //private Difficulty difficulty
-
 
     public String getDescription() {
         return description;
@@ -107,5 +116,22 @@ public class Recipe {
 
     public void setIngredient(Set<Ingredient> ingredient) {
         this.ingredient = ingredient;
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+    }
+
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
     }
 }

@@ -9,6 +9,7 @@ public class UnitOfMeasure {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //You fixed the DB SQL initializtion by renaiming description in script to unit_of_measure since thats whats correlates to YOURS
     private String unitOfMeasure;
 
     public Long getId() {

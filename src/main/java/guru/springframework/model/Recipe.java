@@ -3,6 +3,7 @@ package guru.springframework.model;
 import guru.springframework.enums.Difficulty;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -17,6 +18,8 @@ public class Recipe {
     private Integer servings;
     private String source;
     private String url;
+
+    @Lob
     private String directions;
 
     @Lob //Large Object
@@ -26,7 +29,7 @@ public class Recipe {
     private Notes notes;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
-    private Set<Ingredient> ingredient;
+    private Set<Ingredient> ingredient = new HashSet<>();
 
     //Ordinal is Default - gets persisted to 1...x of # of enums (Easy, Moderate, Hard) => (1,2,3)
     //  STRING overwrites, but is better since is less of a hassle with DB stuff (You add in a extra one and it goes to hell)
@@ -36,7 +39,7 @@ public class Recipe {
     @ManyToMany
     @JoinTable(name = "recipe_category",
         joinColumns = @JoinColumn(name = "recipie_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private Set<Category> categories;
+    private Set<Category> categories = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -108,6 +111,13 @@ public class Recipe {
 
     public void setNotes(Notes notes) {
         this.notes = notes;
+        notes.setRecipe(this);
+    }
+
+    public Recipe addIngredient(Ingredient ingredient){
+        ingredient.setRecipe(this);
+        this.ingredient.add(ingredient);
+        return this;
     }
 
     public Set<Ingredient> getIngredient() {

@@ -18,6 +18,21 @@ public class Ingredient {
     @OneToOne(fetch = FetchType.EAGER)
     private UnitOfMeasure unitOfMeasure;
 
+    public Ingredient() {
+    }
+
+    public Ingredient(String ingredientDescription, BigDecimal amount, UnitOfMeasure unitOfMeasure) {
+        this.ingredientDescription = ingredientDescription;
+        this.amount = amount;
+        this.unitOfMeasure = unitOfMeasure;
+    }
+
+    public Ingredient(String ingredientDescription, BigDecimal amount, UnitOfMeasure unitOfMeasure, Recipe recipe) {
+        this.recipe = recipe;
+        this.ingredientDescription = ingredientDescription;
+        this.amount = amount;
+        this.unitOfMeasure = unitOfMeasure;
+    }
 
     public Long getId() {
         return id;
